@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link href="login.css" rel="stylesheet">
+</head>
+<body>
+<script src="al.js"></script>
+ <div class="container">
+
+      <form class="form-signin">
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <label for="inputEmail" class="sr-only">ID:</label>
+        <input type="email" id="id" class="form-control" placeholder="User ID" required autofocus>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="pass" class="form-control" placeholder="Password" required>
+   
+        <button class="btn btn-lg btn-primary btn-block" onClick='validate()' type="submit">Sign in</button>
+      </form>
+<div id="output"></div>
+
+    </div>
+
+
+
+
+<script>
+
+function validate() {
+	
+	retrieve(() => {
+		var id=getValue("id")
+		var pass=getValue("pass")
+		User = U.find( u => u.id==id && u.password==pass)
+		setCookie()
+		if(User)
+			window.location = User.type=="student" ? "exam.html": "questions.html"
+		else
+			getElement("output").innerHTML="<div id='output' class='alert alert-danger' role='alert'>Failed to login, Try Again.</div>"
+			
+	})
+	
+}  	
+</script>
+</body>
+</html>

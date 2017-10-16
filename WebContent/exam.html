@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Exam</title>
+<script src="al.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href=http://getbootstrap.com/docs/4.0/examples/jumbotron/jumbotron.css">
+
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <a class="navbar-brand" href="#">Exam</a>
+
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+    
+        <div class="col-lg-2 navbar-brand" id = "score"><strong>Score: 0</strong></div>
+          <input type="button" class="btn btn-danger pull-right navbar-brand" value="Log Out"
+				onClick="logout()" />
+       
+      </div>
+    </nav>
+
+<div class="col-lg-12 display-3" id="output"><h1>Loading...</h1></div>
+
+	<div class="jumbotron">
+	
+	<div class="container">
+	<div class="row">
+		<div class="col-lg-4"></div>
+			<div class="col-lg-4">
+				<h4><span>Questions</span></h4>
+			</div>
+			<div class="col-lg-4"></div>
+	</div>
+	<div class="row">
+		<div class="col-lg-4"><span class="pull-right">Q.</span></div>
+			<div id="questions" class=" col-lg-4">
+				
+			</div>
+			<div class="col-lg-4"></div>
+	</div>
+	
+	<div class="row">
+		<div class=" col-lg-4"></div>
+		<div class="col-lg-4">
+					<h4><span>Choices</span></h4>
+			</div>
+			<div class="col-lg-4"></div>
+			</div>
+			<div class="row">
+			<div class="col-lg-4"></div>
+			<div id="choices" class="col-lg-4">
+					<div class=" row col-lg-12">
+					<h5><input type='radio' name="ch_radio" id="c1_radio" value="1" /> <span
+						id='c1'>Sample option</span></h5>
+					</div>
+					<div class=" row col-lg-12">
+					<h5><input type='radio' name="ch_radio" id="c2_radio" value="2" /> <span
+						id='c2'>Sample option</span></h5>
+						</div>
+				<div class=" row col-lg-12">
+				
+				<h5> <input type='radio' name="ch_radio" id="c3_radio" value="3" /> <span
+						id='c3'>Sample option</span></h5>
+						</div>
+						<div class=" row col-lg-12">
+					<h5><input type='radio' name="ch_radio" id="c4_radio" value="4" /> <span
+						id='c4'>Sample option</span></h5>
+						</div>
+				</div>
+				<div class="col-lg-4"></div>
+			</div>
+		
+	
+	<div class="row">
+	<div class="col-lg-3"></div>
+			<div class="col-lg-3">
+			<input type="button" class="btn btn-primary" value="prev"
+				onClick="prevQuestion()" />
+		</div>
+		<div class="col-lg-3">
+			<input type="button" class="btn btn-primary" value="next"
+				onClick="nextQuestion()" />
+			</div>
+			<div class="col-lg-3"></div>
+	</div>
+		</div>
+	</div>
+	<script>
+		var currentQuestion = 0
+		var currentAnswer = null
+		var selectedAnswer = 1
+		var score = 0
+		var answeredFlag = new Array(Q.length)
+		
+		$("#choices").on("change",choicesHandler)
+		
+		OnLoad( () => {
+			if(User)
+				getElement("output").innerHTML = '<h3>Welcome '+ User.name + '</h3>'
+			else
+				getElement("output").innerHTML = "<h3>Who are you?</h3>"
+			fetchQuestion()
+		})
+		
+		function choicesHandler() {
+			selectedAnswer = $("#choices input[type='radio']:checked").val()
+		}
+		
+		function fetchQuestion() {
+			// Fetching the question
+			var questionDiv = $("#questions")
+			// Clear previous question, if any
+			questionDiv.children().remove()
+			var questionElement = $("<div>")
+			var spanElement = $("<span>")
+			spanElement.text(Q[currentQuestion].statement)
+			questionElement.append(spanElement)
+			questionDiv.append(questionElement)
+			
+			// Fetching the choices
+			var choices = Q[currentQuestion].choices
+			for(var i = 1;i<=4;i++) {
+				$("#c"+i).text(choices[i-1])
+			}
+			
+			// Making default selection
+			$("#c1_radio").attr("checked","checked")
+			
+			// Fetching the answer
+			currentAnswer = Q[currentQuestion].answer
+		}
+		
+		function prevQuestion() {
+			if(currentQuestion == 0) {
+				alert("No previous questions")
+			} else if(!selectedAnswer) {
+				alert("Select an answer first")
+			} else {
+				if(selectedAnswer == currentAnswer) {
+					if(!answeredFlag[currentQuestion]) {
+						score ++
+						answeredFlag[currentQuestion] = true
+					}
+				} else
+					answeredFlag[currentQuestion] = false
+				updateScore()
+				currentQuestion --
+				fetchQuestion()
+			}
+		}
+		
+		function nextQuestion() {
+			var endFlag = false
+			if(currentQuestion == Q.length -1) {
+				if(confirm("No more questions! Do you want to end?")){
+					endFlag = true
+				}
+			} else if(!selectedAnswer) {
+				alert("Select an answer first")
+			} else {
+				if(selectedAnswer == currentAnswer) {
+					if(!answeredFlag[currentQuestion]) {
+						score++
+						answeredFlag[currentQuestion] = true
+					}
+				}
+				else
+					answeredFlag[currentQuestion] = false
+				updateScore()
+				currentQuestion ++
+				fetchQuestion()
+			}
+			if(endFlag)
+				showScore()
+		}
+		
+		function updateScore() {
+			var scoreDiv = $("#score")
+			if(selectedAnswer) {
+				scoreDiv.html("<strong>Score: "+score+"</strong>")
+			} else {
+				scoreDiv.html("<strong>Score: 0</strong>")
+			}
+		}
+		
+		function showScore() {
+			console.log("You scored: "+score)
+		}
+		
+	</script>
+
+</body>
+</html>
