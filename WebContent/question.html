@@ -262,12 +262,7 @@
 		
 		function done() {
 			if(confirm("This will log you out. Are you sure?")) {
-				if(questionCount!=0) {
-					if(!saveQuestion()) {
-						alert("Select the correct option!!")
-						return
-					}
-				}
+				
 				logout()
 			}
 		}
