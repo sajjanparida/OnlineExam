@@ -8,7 +8,7 @@
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link rel="stylesheet"
-	href=http://getbootstrap.com/docs/4.0/examples/jumbotron/jumbotron.css">
+	href="http://getbootstrap.com/docs/4.0/examples/jumbotron/jumbotron.css">
 
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -20,7 +20,7 @@
 
       <div class="collapse navbar-collapse" id="navbarsExampleDefault">
     
-        <div class="col-lg-2 navbar-brand" id = "score"><strong>Score: 0</strong></div>
+       <div class="col-lg-2 navbar-brand" id="scoreDialog"><strong>Score: </strong></div>
           <input type="button" class="btn btn-danger pull-right navbar-brand" value="Log Out"
 				onClick="logout()" />
        
@@ -32,6 +32,12 @@
 	<div class="jumbotron">
 	
 	<div class="container">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Exam</h5>
+      </div>
+      <div class="modal-body">
 	<div class="row">
 		<div class="col-lg-4"></div>
 			<div class="col-lg-4">
@@ -40,7 +46,7 @@
 			<div class="col-lg-4"></div>
 	</div>
 	<div class="row">
-		<div class="col-lg-4"><span class="pull-right">Q.</span></div>
+		<div class="col-lg-4"></div>
 			<div id="questions" class=" col-lg-4">
 				
 			</div>
@@ -79,49 +85,54 @@
 			</div>
 		
 	
-	<div class="row">
-	<div class="col-lg-3"></div>
-			<div class="col-lg-3">
-			<input type="button" class="btn btn-primary" value="prev"
+	
+	</div>
+	  <div class="modal-footer">
+       <input type="button" class="btn btn-primary" value="prev"
 				onClick="prevQuestion()" />
-		</div>
-		<div class="col-lg-3">
-			<input type="button" class="btn btn-primary" value="next"
+				
+       <input type="button" class="btn btn-primary" value="next"
 				onClick="nextQuestion()" />
-			</div>
-			<div class="col-lg-3"></div>
-	</div>
+				
+		<input type="button" class="btn btn-primary" value="finish"
+				onClick="endExam()" />		
+       
+      </div>
+    </div>
+  </div>
+</div>
+
 		</div>
-	</div>
 	<script>
-		var currentQuestion = 0
-		var currentAnswer = null
-		var selectedAnswer = 1
-		var score = 0
-		var answeredFlag = new Array(Q.length)
-		
-		$("#choices").on("change",choicesHandler)
-		
-		OnLoad( () => {
-			if(User)
-				getElement("output").innerHTML = '<h3>Welcome '+ User.name + '</h3>'
-			else
-				getElement("output").innerHTML = "<h3>Who are you?</h3>"
-			fetchQuestion()
-		})
-		
-		function choicesHandler() {
-			selectedAnswer = $("#choices input[type='radio']:checked").val()
-		}
-		
-		function fetchQuestion() {
+	var currentQuestion = 0
+	var currentAnswer = null
+	var selectedAnswer = 1
+	var score = 0
+	var answeredFlag = new Array(Q.length)
+	
+	$("#choices").on("change",choicesHandler)
+	
+	OnLoad( () => {
+		if(User)
+			getElement("output").innerHTML = '<h1> Welcome '+ User.name + '</h1>'
+		else
+			getElement("output").innerHTML = "Who are you?"
+		fetchQuestion()
+	})
+	
+	function choicesHandler() {
+		selectedAnswer = $("#choices input[type='radio']:checked").val()
+	}
+	
+	function fetchQuestion() {
+		if(currentQuestion < Q.length) {
 			// Fetching the question
 			var questionDiv = $("#questions")
 			// Clear previous question, if any
 			questionDiv.children().remove()
 			var questionElement = $("<div>")
 			var spanElement = $("<span>")
-			spanElement.text(Q[currentQuestion].statement)
+			spanElement.text("Q." + Q[currentQuestion].statement+"?")
 			questionElement.append(spanElement)
 			questionDiv.append(questionElement)
 			
@@ -137,64 +148,77 @@
 			// Fetching the answer
 			currentAnswer = Q[currentQuestion].answer
 		}
-		
-		function prevQuestion() {
-			if(currentQuestion == 0) {
-				alert("No previous questions")
-			} else if(!selectedAnswer) {
-				alert("Select an answer first")
-			} else {
-				if(selectedAnswer == currentAnswer) {
-					if(!answeredFlag[currentQuestion]) {
-						score ++
-						answeredFlag[currentQuestion] = true
-					}
-				} else
-					answeredFlag[currentQuestion] = false
-				updateScore()
-				currentQuestion --
-				fetchQuestion()
-			}
-		}
-		
-		function nextQuestion() {
-			var endFlag = false
-			if(currentQuestion == Q.length -1) {
-				if(confirm("No more questions! Do you want to end?")){
-					endFlag = true
+	}
+	
+	function prevQuestion() {
+		if(currentQuestion == 0) {
+			alert("No previous questions")
+		} else if(!selectedAnswer) {
+			alert("Select an answer first")
+		} else {
+			if(selectedAnswer == currentAnswer) {
+				if(!answeredFlag[currentQuestion]) {
+					score ++
+					answeredFlag[currentQuestion] = true
 				}
-			} else if(!selectedAnswer) {
-				alert("Select an answer first")
-			} else {
-				if(selectedAnswer == currentAnswer) {
-					if(!answeredFlag[currentQuestion]) {
-						score++
-						answeredFlag[currentQuestion] = true
-					}
+			} else
+				answeredFlag[currentQuestion] = false
+			updateScore()
+			currentQuestion --
+			fetchQuestion()
+		}
+	}
+	
+	function nextQuestion() {
+		var endFlag = false
+		if(currentQuestion == Q.length-1) {
+			if(confirm("No more questions! Do you want to end?")){
+				endFlag = true
+			}
+		}
+		if(!selectedAnswer) {
+			alert("Select an answer first")
+		} else {
+			if(selectedAnswer == currentAnswer) {
+				if(!answeredFlag[currentQuestion]) {
+					score ++
+					answeredFlag[currentQuestion] = true
 				}
-				else
-					answeredFlag[currentQuestion] = false
-				updateScore()
-				currentQuestion ++
-				fetchQuestion()
 			}
-			if(endFlag)
-				showScore()
+			else
+				answeredFlag[currentQuestion] = false
+			updateScore()
+			currentQuestion ++
+			fetchQuestion()
 		}
-		
-		function updateScore() {
-			var scoreDiv = $("#score")
-			if(selectedAnswer) {
-				scoreDiv.html("<strong>Score: "+score+"</strong>")
-			} else {
-				scoreDiv.html("<strong>Score: 0</strong>")
-			}
+		console.log("EndFlag: "+endFlag)
+		if(endFlag)
+			showScore()
+	}
+	
+	function updateScore() {
+		var scoreDiv = $("#score")
+		if(selectedAnswer) {
+			scoreDiv.html("<strong>Score: "+score+"</strong>")
+		} else {
+			scoreDiv.html("<strong>Score: 0</strong>")
 		}
-		
-		function showScore() {
-			console.log("You scored: "+score)
-		}
-		
+	}
+	
+	function endExam() {
+		showScore()
+	}
+	
+	function showScore() {
+		var body = $("body")
+		// Hiding the exam elements
+		$(body.children("div")[1]).hide()
+		$(body.children("div")[2]).hide()
+		var dialogElement = document.getElementById("scoreDialog")
+		$(dialogElement).text("Your scored: "+score)
+		dialogElement.show()
+		console.log("You scored: "+score)
+	}
 	</script>
 
 </body>

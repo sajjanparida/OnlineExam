@@ -2,65 +2,121 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Questions</title>
+<title>Exam</title>
 <script src="al.js"></script>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="http://getbootstrap.com/docs/4.0/examples/jumbotron/jumbotron.css">
+
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
-	<div class="row">
-		<div class="col-lg-6" id="output">Loading...</div>
-		<div class="col-lg-6">
-			<input type="button" class="btn btn-danger" value="Log Out"
-				onClick="takeMeOut()" />
+
+	<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+		<a class="navbar-brand" href="#">Exam</a>
+
+		<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+
+			<input type="button" class="btn btn-danger pull-right navbar-brand"
+				value="Log Out" onClick="takeMeOut()" />
+
 		</div>
+	</nav>
+
+	<div class="col-lg-12 display-3" id="output">
+		<h1>Loading...</h1>
 	</div>
-	<div class="row">
-		<div class="col-lg-6">
-			<div class="row col-lg-12">
-				<span><strong>Questions</strong></span>
-			</div>
-			<div id="questions" class="row col-lg-12"></div>
-		</div>
-		<div class="col-lg-6">
-			<div class="row col-lg-12">
-				<span><strong>Choices</strong></span>
-			</div>
-			<div id="choices">
-				<div class='row col-lg-12'>
-					<input type='radio' name="ch_radio" id="c1_radio" value="1" /> <span
-						id='c1'>Sample option</span>
-				</div>
-				<div class='row col-lg-12'>
-					<input type='radio' name="ch_radio" id="c2_radio" value="2" /> <span
-						id='c2'>Sample option</span>
-				</div>
-				<div class='row col-lg-12'>
-					<input type='radio' name="ch_radio" id="c3_radio" value="3" /> <span
-						id='c3'>Sample option</span>
-				</div>
-				<div class='row col-lg-12'>
-					<input type='radio' name="ch_radio" id="c4_radio" value="4" /> <span
-						id='c4'>Sample option</span>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6">
+				<h4>
+					<span>Questions</span>
+				</h4>
+				<div id="question1" class="row col-lg-12">
 				</div>
 			</div>
+
 		</div>
-	</div>
-	<div class="row">
-		<div class="col-sm-1">
-			<input type="button" class="btn btn-primary" value="add"
-				onClick="addQuestion()" />
-		</div>
-		<div class="col-sm-1">
-			<input type="button" class="btn btn-danger" value="remove"
-				onClick="removeQuestion()" />
+
+
+		<div class="row">
+			<div class="col-lg-4">
+				<button type="button" class="btn btn-primary" data-toggle="modal"
+					data-target="#exampleModal" onClick = "openModal()">Add Question</button>
+			</div>
+			<div class="col-lg-4">
+				<input type="button" class="btn btn-danger" value="remove"
+					onClick="removeQuestion()" />
+			</div>
+			<div class="col-lg-4"></div>
 		</div>
 	</div>
 
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h3 class="modal-title" id="exampleModalLabel">Add Questions</h3>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-lg-6">
+							<h4>
+								<span>Questions</span>
+							</h4>
+							<div id="questions" class="row col-lg-12"><span>Sample Question</span></div>
+						</div>
+						<div class="col-lg-6">
+							<h4>
+								<span>Choices</span>
+							</h4>
+							<div id="choices" class="col-lg-6">
+								<div class=" row col-lg-12">
+									<h5>
+										<input type='radio' name="ch_radio" id="c1_radio" value="1" />
+										<span id='c1'>Sample option</span>
+									</h5>
+								</div>
+								<div class=" row col-lg-12">
+									<h5>
+										<input type='radio' name="ch_radio" id="c2_radio" value="2" />
+										<span id='c2'>Sample option</span>
+									</h5>
+								</div>
+								<div class=" row col-lg-12">
 
+									<h5>
+										<input type='radio' name="ch_radio" id="c3_radio" value="3" />
+										<span id='c3'>Sample option</span>
+									</h5>
+								</div>
+								<div class=" row col-lg-12">
+									<h5>
+										<input type='radio' name="ch_radio" id="c4_radio" value="4" />
+										<span id='c4'>Sample option</span>
+									</h5>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal" onClick = "addQuestion()">Finish</button>
+				</div>
+			</div>
+		</div>
+
+	</div>
 
 	<script>
 		
@@ -71,7 +127,7 @@
 		var selectedQuestion = null
 		OnLoad( () => {
 			if(User)
-				getElement("output").innerHTML = "Welcome "+ User.name
+				getElement("output").innerHTML = "<h1>Welcome "+ User.name + "</h1>"
 			else
 				getElement("output").innerHTML = "Who are you?"
 		});
@@ -81,9 +137,15 @@
 		
 		$("#questions").click(editQuestion)
 		$("#questions").focusout(questionEdited)
+	
 		
 		$("#choices").click(setOption)
 		$("#choices").focusout(saveOption)
+		
+		function openModal() {
+			$("questions").children("span").attr("id",questionCount)
+			questionCount ++
+		}
 		
 		function resetChoices() {
 			for(var i = 1;i<=4;i++)
@@ -92,7 +154,7 @@
 		
 		// Updates the list with the stored questions
 		function retrieveQuestions() {
-			var questionsDiv = $("#questions")
+			var questionsDiv = $("#question1")
 			for(var i = 0;i<questionCount;i++) {
 				var questionElement = $("<div>")
 				var spanElement = $("<span>")
@@ -101,31 +163,15 @@
 				questionElement.attr("id",i+1)
 				questionsDiv.append(questionElement)
 			}
-			// retrieve the options
-			retrieveOptions()
-			// Prevent duplicacy of the latest question
-			Q.pop()
-			store(function () {
-				console.log("Popped to prevent duplicacy")
-			})
-		}
-		
-		// Populate the options with the top question's choices
-		function retrieveOptions() {
-			if(questionCount != 0) {
-				for(var i = 0;i<4;i++) {
-					$("#c"+(i+1)).text(Q[questionCount-1].choices[i])
-				}
-				var answer = Q[questionCount-1].answer
-				$("#c"+answer+"_radio").attr("checked","checked")
-			} else
-				hideChoices()
+			
 		}
 		
 		function editQuestion(event) {
 			var element = $(event.target)
+			console.log(event.target.nodeName)
 			var qID = element.parent().attr("id")
-			if(event.target.nodeName == "SPAN" && qID == questionCount) {
+			console.log("qID: "+qID+" questionCount: "+questionCount)
+			if(event.target.nodeName == "SPAN") {
 				var questionText = element.text()
 				var parentElement = element.parent()
 				var inputElement = $("<input />")
@@ -138,7 +184,7 @@
 		function questionEdited(event) {
 			var element = $(event.target)
 			var qID = element.parent().attr("id")
-			if(event.target.nodeName == "INPUT" && qID == questionCount) {
+			if(event.target.nodeName == "INPUT") {
 				var questionText = element.val()
 				selectedQuestion = questionText
 				var parentElement = element.parent()
@@ -197,12 +243,14 @@
 					alert("Select the correct option!!")
 					return
 				}
-				resetChoices()
+	
 			}
-			questionCount ++
-			var questionsDiv = $("#questions")
+			
+			var questionsDiv = $("#question1")
 			var questionElement = $("<div>")
-			questionElement.append("<span>Sample Question</span>")
+			var spanElement = $("<span>")
+			spanElement.text("Q." + Q[questionCount-1].statement + "?" )
+			questionElement.append(spanElement)
 			questionElement.attr("id",questionCount)
 			questionsDiv.append(questionElement)
 			showChoices()
@@ -225,7 +273,7 @@
 		}
 		
 		function saveQuestion() {
-			qStatement = $("#questions #"+questionCount+" span").text()
+			qStatement = $("#questions span").text()
 			console.log("Question: "+qStatement)
 			qChoices = [$('#c1').text(),$('#c2').text(),$('#c3').text(),$('#c4').text()]
 			console.log("Choices: "+qChoices)
@@ -248,20 +296,19 @@
 		
 		function removeQuestion() {
 			if(questionCount != 0) {
-				$("#questions #"+questionCount).remove()
+				$("#question1 #"+questionCount).remove()
 				questionCount --
 				// Remove from the Question stack
 				Q.pop()
 				store(function(){
 					console.log("Question popped")
 				})
-				// Retrieve the latest question's choices
-				retrieveOptions()
 			}else {
 				console.log("Add question first")
 			}
 		}
 	</script>
+
 
 </body>
 </html>

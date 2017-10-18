@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Login</title>
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link href="login.css" rel="stylesheet">
@@ -37,7 +37,7 @@ function validate() {
 		User = U.find( u => u.id==id && u.password==pass)
 		setCookie()
 		if(User)
-			window.location = User.type=="student" ? "exam.html": "questions.html"
+			window.location = User.type=="student" ? "exam.html": "question.html"
 		else
 			getElement("output").innerHTML="<div id='output' class='alert alert-danger' role='alert'>Failed to login, Try Again.</div>"
 			
