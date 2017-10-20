@@ -200,9 +200,9 @@
 		}
 		
 		function saveQuestion() {
-			qStatement = $("#questions input").text()
+			qStatement = $("#questions input").val()
 			console.log("Question: "+qStatement)
-			qChoices = [$('#c1').text(),$('#c2').text(),$('#c3').text(),$('#c4').text()]
+			qChoices = [$('#c1').val(),$('#c2').val(),$('#c3').val(),$('#c4').val()]
 			console.log("Choices: "+qChoices)
 			qAnswer = $("#choices input[type='radio']:checked").val()
 			console.log("Selected: "+qAnswer)
